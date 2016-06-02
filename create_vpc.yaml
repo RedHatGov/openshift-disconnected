@@ -134,7 +134,7 @@
         - "{{ public_vpc.subnets.0.id }}"
       routes:
         - dest: 10.0.0.0/16
-          gateway_id: "{{ vpc_peer.peering_id }}"
+          vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
         - dest: 0.0.0.0/0
           gateway_id: "{{ vpc_public.igw_id }}"
     register: public_route_table
