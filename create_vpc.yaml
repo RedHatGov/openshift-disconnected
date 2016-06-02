@@ -97,6 +97,9 @@
       region: "{{ ec2_region }}"
       peering_id: "{{ vpc_peer.peering_id }}"
       state: accept
+      tags:
+        Name: "Accepted peer request"
+        env: "{{ vpc_peer.peering_id }}"
     register: action_peer
 
   - name: Debug peering action structure

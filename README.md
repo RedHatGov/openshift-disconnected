@@ -12,6 +12,12 @@ While we're figuring this out, we're going to focus on:
 ## Ansible version
 This requires Ansible 2.2. Instructions for installation from source are at: http://docs.ansible.com/ansible/intro_installation.html#running-from-source
 
+When running on my Mac, I had to set the PYTHONPATH before sourcing hacking/env-setup:
+
+```
+$ export PYTHONPATH=/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages:/usr/local/lib/python2.7/site-packages
+```
+
 ## Usage
 To set up your disconnected environment, first source your secrets environment file.
 
