@@ -5,7 +5,7 @@
   gather_facts: no
   connection: local
   become: False
-  vars_files:
+  vars:
     debug_print: true
     cluster_id: "{{ lookup('env','os_cluster_id') }}"
     ec2_region: "{{ lookup('env','ec2_region') }}"
