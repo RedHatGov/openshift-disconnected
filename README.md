@@ -9,6 +9,9 @@ While we're figuring this out, we're going to focus on:
 3. Make it fast
 4. Cross-platform (OpenStack, etc.)
 
+## Ansible version
+This requires Ansible 2.2. Instructions for installation from source are at: http://docs.ansible.com/ansible/intro_installation.html#running-from-source
+
 ## Usage
 To set up your disconnected environment, first source your secrets environment file.
 
