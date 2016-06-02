@@ -12,10 +12,18 @@ While we're figuring this out, we're going to focus on:
 ## Usage
 To set up your disconnected environment, first source your secrets environment file.
 
+Your secrets file should look something like:
+
+```
+#!/bin/bash
+
+export AWS_ACCESS_KEY_ID='abcd...'
+export AWS_SECRET_ACCESS_KEY='1234...'
+```
+
 Then:
 
 ```
 $ cd openshift-disconnected
-$ source env_aws.sh
 $ ./create_infrastructure.sh
 ```
