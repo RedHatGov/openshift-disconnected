@@ -12,6 +12,7 @@
     os_cluster_id: "{{ lookup('env','os_cluster_id') }}"
     ec2_keypair: "{{ lookup('env','ec2_keypair') }}"
     ec2_instance_type_bastion: "{{ lookup('env','ec2_instance_type_bastion') }}"
+    ec2_image: "{{ lookup('env','ec2_image') }}"
 
 
   tasks:
@@ -78,16 +79,6 @@
 
   - name: Debug ec2 data structure
     debug: var=ec2
-    when: debug_print == true
-
-  - name: Add hosts to ec2 group
-    add_host: name={{ item.public_dns_name }} groups=ec2
-    with_items:
-      - "{{ ec2.results.0.instances }}"
-      - "{{ ec2.results.1.instances }}"
-
-  - name: debug groups variable
-    debug: var=groups
     when: debug_print == true
 
   - name: Wait for SSH to come up
