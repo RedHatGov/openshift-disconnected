@@ -11,6 +11,7 @@
     ec2_region: "{{ lookup('env','ec2_region') }}"
     os_cluster_id: "{{ lookup('env','os_cluster_id') }}"
     ec2_keypair: "{{ lookup('env','ec2_keypair') }}"
+    ec2_instance_type_bastion: "{{ lookup('env','ec2_instance_type_bastion') }}"
 
 
   tasks:
@@ -51,14 +52,15 @@
       image: "{{ ec2_image }}"
       region: "{{ ec2_region }}"
       key_name: "{{ ec2_keypair }}"
-      instance_type: "{{ ec2_instance_type }}"
+      instance_type: "{{ ec2_instance_type_bastion }}"
       group_id: "{{ security_group.group_id }}"
       instance_tags:
-        Name: "{{ cluster_id }}"
+        Name: "{{ cluster_id }}-bastion"
         instance_role: "bastion"
+        env: "{{ cluster_id }}"
       exact_count: "1"
       count_tag:
-        Name: "{{ cluster_id }}"
+        Name: "{{ cluster_id }}-bastion"
         instance_role: "bastion"
       wait: yes
       volumes:
