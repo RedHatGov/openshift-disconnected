@@ -33,11 +33,11 @@
         - proto: all
           from_port: -1
           to_port: -1
-          group_id: 10.0.0.0/16
+          cidr_ip: 10.0.0.0/16
         - proto: all
           from_port: -1
           to_port: -1
-          group_id: 192.168.0.0/16
+          cidr_ip: 192.168.0.0/16
       rules_egress:
         - proto: all
           cidr_ip: 0.0.0.0/0
