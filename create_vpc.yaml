@@ -40,9 +40,6 @@
       wait: yes
     register: private_vpc
 
-  - name: Pausing for private VPC creation
-    pause: seconds=10
-
   - name: Debug private vpc data structure
     debug: var=private_vpc
     when: debug_print == true
@@ -75,9 +72,6 @@
           env: "{{ cluster_id }}"
       wait: yes
     register: public_vpc
-
-  - name: Pausing for public VPC creation
-    pause: seconds=10
 
   - name: Debug public vpc data structure
     debug: var=public_vpc
