@@ -2,5 +2,8 @@
 
 source env_aws.sh
 
-echo "Refreshing dynamic EC2 inventory. Stand by..."
+printf "Refreshing EC2 cache..."
+./inventory/aws/hosts/ec2.py --refresh-cache
+printf "done\n"
+
 ansible-playbook -v -i inventory/aws/hosts/ec2.py create_infrastructure.yaml

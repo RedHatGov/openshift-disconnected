@@ -10,9 +10,8 @@
     cluster_id: "{{ lookup('env','os_cluster_id') }}"
     ec2_region: "{{ lookup('env','ec2_region') }}"
     os_cluster_id: "{{ lookup('env','os_cluster_id') }}"
-    ec2_public_az: "{{ lookup('env','ec2_public_az') }}"
-    ec2_private_1a_az: "{{ lookup('env','ec2_private_1a_az') }}"
-    ec2_private_1e_az: "{{ lookup('env','ec2_private_1e_az') }}"
+    ec2_keypair: "{{ lookup('env','ec2_keypair') }}"
+
 
   tasks:
   - name: Create bastion security group
