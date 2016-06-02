@@ -117,7 +117,7 @@
         - "{{ private_vpc.subnets.1.id }}"
       routes:
         - dest: 192.168.0.0/16
-          gateway_id: "{{ vpc_peer.peering_id }}"
+          vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
     register: private_route_table
 
   - name: Debug private subnet route structure
