@@ -136,7 +136,7 @@
         - dest: 10.0.0.0/16
           vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
         - dest: 0.0.0.0/0
-          gateway_id: "{{ vpc_public.igw_id }}"
+          gateway_id: "{{ public_vpc.igw_id }}"
     register: public_route_table
 
   - name: Debug public subnet route structure
