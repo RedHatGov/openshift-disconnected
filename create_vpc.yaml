@@ -23,19 +23,19 @@
       cidr_block: 10.0.0.0/16
       resource_tags:
         env: "{{ cluster_id }}"
-        Name: "{{ cluster_id }}-private-vpc"
+        Name: "{{ cluster_id }}-private"
       region: "{{ ec2_region }}"
       subnets:
       - cidr: 10.0.1.0/24
         az: "{{ ec2_private_1a_az }}"
         resource_tags:
           env: "{{ cluster_id }}"
-          Name: "{{ cluster_id }} private 1a subnet"
+          Name: "{{ cluster_id }}-private-1a"
       - cidr: 10.0.2.0/24
         az: "{{ ec2_private_1e_az }}"
         resource_tags:
           env: "{{ cluster_id }}"
-          Name: "{{ cluster_id }} private 1e subnet"
+          Name: "{{ cluster_id }}-private-1e"
       internet_gateway: no
       wait: yes
     register: private_vpc
@@ -52,14 +52,14 @@
       cidr_block: 192.168.0.0/16
       resource_tags:
         env: "{{ cluster_id }}"
-        Name: "{{ cluster_id }}-public-vpc"
+        Name: "{{ cluster_id }}-public"
       region: "{{ ec2_region }}"
       subnets:
       - cidr: 192.168.1.0/24
         az: "{{ ec2_public_az }}"
         resource_tags:
           env: "{{ cluster_id }}"
-          Name: "{{ cluster_id }} public subnet"
+          Name: "{{ cluster_id }}-public-1a"
       internet_gateway: yes
       route_tables:
       - subnets:
@@ -68,7 +68,7 @@
         - dest: 0.0.0.0/0
           gw: igw
         resource_tags:
-          Name: "{{ cluster_id }}-public-route"
+          Name: "{{ cluster_id }}-public"
           env: "{{ cluster_id }}"
       wait: yes
     register: public_vpc
@@ -84,8 +84,8 @@
       peer_vpc_id: "{{ private_vpc.vpc_id }}"
       state: present
       tags:
-        Name: "Peering conenction for public to private vpcs"
-        env: "{{ os_cluster_id }}"
+        Name: "{{ cluster_id }}-public-private-conn"
+        env: "{{ cluster_id }}"
     register: vpc_peer
 
   - name: Debug vpc peer structure
@@ -98,8 +98,8 @@
       peering_id: "{{ vpc_peer.peering_id }}"
       state: accept
       tags:
-        Name: "Accepted peer request"
-        env: "{{ vpc_peer.peering_id }}"
+        Name: "{{ cluster_id }}-public-private-req"
+        env: "{{ cluster_id }}"
     register: action_peer
 
   - name: Debug peering action structure
@@ -112,6 +112,7 @@
       region: "{{ ec2_region }}"
       tags:
         Name: private
+        env: "{{ cluster_id }}"
       subnets:
         - "{{ private_vpc.subnets.0.id }}"
         - "{{ private_vpc.subnets.1.id }}"
@@ -130,6 +131,7 @@
       region: "{{ ec2_region }}"
       tags:
         Name: public
+        env: "{{ cluster_id }}"
       subnets:
         - "{{ public_vpc.subnets.0.id }}"
       routes:
