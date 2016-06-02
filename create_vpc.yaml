@@ -40,7 +40,8 @@
       wait: yes
     register: private_vpc
 
-  - pause: seconds=10
+  - name: Pausing for private VPC creation
+    pause: seconds=10
 
   - name: Debug private vpc data structure
     debug: var=private_vpc
@@ -75,7 +76,8 @@
       wait: yes
     register: public_vpc
 
-  - pause: seconds=10
+  - name: Pausing for public VPC creation
+    pause: seconds=10
 
   - name: Debug public vpc data structure
     debug: var=public_vpc

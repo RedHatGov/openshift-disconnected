@@ -7,3 +7,6 @@
 
 # Create the VPC
 - include: create_vpc.yaml
+
+# Create the bastion host
+- include: create_bastion.yaml

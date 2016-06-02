@@ -28,6 +28,7 @@ Your secrets file should look something like:
 
 export AWS_ACCESS_KEY_ID='abcd...'
 export AWS_SECRET_ACCESS_KEY='1234...'
+export ec2_keypair="keypair_name"
 ```
 
 Then:
