@@ -81,11 +81,19 @@
     debug: var=ec2
     when: debug_print == true
 
+  - set_fact:
+      bastion_public_dns_name: "{{ ec2.instances[0].public_dns_name }}"
+    when: ec2.instances is defined and ec2.instances
+
+  - set_fact:
+      bastion_public_dns_name: "{{ ec2.tagged_instances[0].public_dns_name }}"
+    when: ec2.tagged_instances is defined and ec2.tagged_instances
+
   - name: Wait for SSH to come up
-    wait_for: host={{ ec2.instances.0.public_dns_name }} port=22 delay=0 timeout=600 state=started
+    wait_for: host={{ bastion_public_dns_name }} port=22 delay=0 timeout=600 state=started
 
   - name: Wait for successful SSH
-    command: "ssh -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null ec2-user@{{ ec2.instances.0.public_dns_name }} echo host is up"
+    command: "ssh -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null ec2-user@{{ bastion_public_dns_name }} echo host is up"
     register: result
     until: result.rc == 0
     retries: 60
