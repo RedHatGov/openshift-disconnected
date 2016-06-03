@@ -1,0 +1,37 @@
+# vim: set ft=ansible:
+---
+- name: Configure the bastion host
+  hosts: ec2
+  gather_facts: no
+  become: True
+  become_method: sudo
+
+  tasks:
+  - name: Copy partition script
+    copy:
+      src: ./partition.sh
+      dest: /tmp/partition.sh
+      owner: root
+      mode: 0700
+
+  - name: Execute the partition script
+    shell: /tmp/partition.sh
+
+  - name: Format EBS volume
+    filesystem:
+      fstype: xfs
+      dev: /dev/xvdb1
+
+  - name: Make the yum html directory
+    file:
+      path: "/var/www/html"
+      state: directory
+      mode: 0755
+      recurse: yes
+
+  - name: Mount the volume
+    mount:
+      name: "/var/www/html"
+      src: /dev/xvdb1
+      fstype: xfs
+      state: mounted

@@ -10,3 +10,6 @@
 
 # Create the bastion host
 - include: create_bastion.yaml
+
+# Configure the bastion host
+- include: configure_bastion.yaml

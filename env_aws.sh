@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+export ANSIBLE_HOST_KEY_CHECKING="False"
 export ec2_region='us-east-1'
 export os_cluster_id='ose-disconn'
 export ec2_public_az="${ec2_region}a"
