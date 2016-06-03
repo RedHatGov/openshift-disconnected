@@ -2,8 +2,10 @@
 
 source env_aws.sh
 
-#printf "Refreshing EC2 cache..."
-#./inventory/aws/hosts/ec2.py --refresh-cache
-#printf "done\n"
+read -p "RHN Username: " username
+read -s -p "RHN Password: " password
+export rhn_username="${username}"
+export rhn_password="${password}"
+echo
 
 ansible-playbook -v -i inventory/aws/hosts/ec2.py create_infrastructure.yaml
