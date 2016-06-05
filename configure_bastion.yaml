@@ -90,6 +90,46 @@
   - name: Restore SELinux context
     command: restorecon -R /var/www/html
 
+  - name: Install TigerVNC
+    yum:
+      name: tigervnc-server
+      state: present
+
+  - name: Install the 'Gnome desktop' environment group
+    yum:
+      name: "@^Server with GUI"
+      state: present
+
+  - name: Copy TigerVNC service file
+    command: cp /usr/lib/systemd/system/vncserver@.service /etc/systemd/system/vncserver@.service
+
+  - name: Configure TigerVNC service file
+    command: sed -i -e 's/<USER>/osebastion/g' /etc/systemd/system/vncserver@.service
+
+  - name: Reload systemctl
+    command: systemctl daemon-reload
+
+  - name: Create osebastion user
+    user:
+      name: osebastion
+      state: present
+
+  - name: Copy set_vncpasswd.sh
+    copy:
+      src: set_vncpasswd.sh
+      dest: /tmp/set_vncpasswd.sh
+      owner: root
+      mode: 0755
+
+  - name: Execute set_vncpasswd.sh
+    command: /tmp/set_vncpasswd.sh
+
+  - name: Start TigerVNC
+    service:
+      name: vncserver@:2.service
+      state: started
+      enabled: yes
+
   - name: Sync OpenShift repos
     command: reposync -n -r "{{ item }}" -p "/var/www/html/"
     with_items:
