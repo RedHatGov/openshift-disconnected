@@ -13,6 +13,8 @@
     ec2_keypair: "{{ lookup('env','ec2_keypair') }}"
     ec2_instance_type_bastion: "{{ lookup('env','ec2_instance_type_bastion') }}"
     ec2_image: "{{ lookup('env','ec2_image') }}"
+    r53_zone: "{{ lookup('env','r53_zone') }}"
+
 
 
   tasks:
@@ -71,7 +73,7 @@
           delete_on_termination: True
         - device_name: /dev/xvdb
           device_type: gp2
-          volume_size: 300
+          volume_size: 30
           delete_on_termination: True
       assign_public_ip: yes
       vpc_subnet_id: "{{ public_vpc.subnets.0.id }}"
@@ -82,20 +84,52 @@
     when: debug_print == true
 
   - set_fact:
-      bastion_public_dns_name: "{{ ec2.instances[0].public_dns_name }}"
+      bastion_instance_id:  "{{ ec2.instances[0].id }}"
     when: ec2.instances is defined and ec2.instances
 
   - set_fact:
-      bastion_public_dns_name: "{{ ec2.tagged_instances[0].public_dns_name }}"
+      bastion_instance_id: "{{ ec2.tagged_instances[0].id }}"
     when: ec2.tagged_instances is defined and ec2.tagged_instances
 
-  - add_host: name={{ bastion_public_dns_name }} groups=bastion
+  - set_fact:
+      bastion_dns_name: "{{ cluster_id }}.{{ r53_zone }}"
+
+  - name: Allocate and associate an Elastic IP
+    ec2_eip:
+      instance_id: "{{ bastion_instance_id }}"
+      region: "{{ ec2_region }}"
+      state: present
+    register: eip
+
+  - set_fact:
+      bastion_eip: "{{ eip.public_ip }}"
+
+  - name: Create A record in Route53
+    route53:
+      command: create
+      zone: "{{ r53_zone }}"
+      record: "{{ bastion_dns_name }}"
+      type: A
+      ttl: 300
+      value: "{{ bastion_eip }}"
+      wait: no
+      overwrite: yes
+
+#  - set_fact:
+#      bastion_public_dns_name: "{{ ec2.instances[0].public_dns_name }}"
+#    when: ec2.instances is defined and ec2.instances
+
+#  - set_fact:
+#      bastion_public_dns_name: "{{ ec2.tagged_instances[0].public_dns_name }}"
+#    when: ec2.tagged_instances is defined and ec2.tagged_instances
+
+  - add_host: name={{ bastion_dns_name }} groups=bastion
 
   - name: Wait for SSH to come up
-    wait_for: host={{ bastion_public_dns_name }} port=22 delay=0 timeout=600 state=started
+    wait_for: host={{ bastion_dns_name }} port=22 delay=0 timeout=600 state=started
 
   - name: Wait for successful SSH
-    command: "ssh -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null ec2-user@{{ bastion_public_dns_name }} echo host is up"
+    command: "ssh -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null ec2-user@{{ bastion_dns_name }} echo host is up"
     register: result
     until: result.rc == 0
     retries: 60
