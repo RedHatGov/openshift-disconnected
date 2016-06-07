@@ -95,10 +95,13 @@
       name: tigervnc-server
       state: present
 
+  # Could take up to 20 minutes
   - name: Install the 'Gnome desktop' environment group
     yum:
       name: "@^Server with GUI"
       state: present
+    async: 1200
+    poll: 60
 
   - name: Copy TigerVNC service file
     command: cp /usr/lib/systemd/system/vncserver@.service /etc/systemd/system/vncserver@.service
@@ -130,12 +133,15 @@
       state: started
       enabled: yes
 
+  # We'll give this 30 minutes to complete, checking every minute
   - name: Sync OpenShift repos
     command: reposync -n -r "{{ item }}" -p "/var/www/html/"
     with_items:
       - "rhel-7-server-rpms"
       - "rhel-7-server-extras-rpms"
       - "rhel-7-server-ose-3.2-rpms"
+    async: 1800
+    poll: 60
 
   - name: Install createrepo
     yum:
