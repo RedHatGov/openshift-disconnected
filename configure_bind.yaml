@@ -1,0 +1,11 @@
+---
+- hosts: tag_Name_use_srv2
+  gather_facts: no
+  user: durellw
+  sudo: yes
+  vars:
+    domainname: openshift.rhtps.io
+    keyfile: "/var/named/{{ $domainname }}"
+  roles:
+  - role:
+      configure_broker_bind

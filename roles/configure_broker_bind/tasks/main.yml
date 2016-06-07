@@ -1,0 +1,66 @@
+---
+# tasks file for configure_broker_bind
+- name: Install bind and bind utils
+  yum: "name={{ item }} state=present"
+  with_items:
+  - bind
+  - bind-utils
+
+- name: Generate rndc configuration
+  command: rndc-confgen -a -r /dev/urandom creates=/etc/rndc.key
+
+- name: Restore selinux context on bind files
+  command: "restorecon -v {{ item }}"
+  with_items:
+  - /etc/rndc.*
+  - /etc/named.*
+  register: restorecon
+
+- name: chown rndc.key
+  command: chown -v root:named /etc/rndc.key
+
+- name: chmod rndc key
+  command: chmod -v 640 /etc/rndc.key
+
+- name: Remove and re-create the bind dynamic dir
+  file: "path=/var/named/dynamic state={{ item }}"
+  with_items:
+  - absent
+  - directory
+
+- name: Create the zone for the domain
+  template: src=zone.j2 dest=/var/named/dynamic/{{ domainname }}.db owner=named group=named mode=444
+
+- name: Create DNSSEC key for the domain
+  template: src=key.j2 dest=/var/named/{{ domainname }}.key
+
+- name: Change ownership, group ownership and restore context of /var/named 
+  command: "{{ item }}"
+  with_items:
+  - "chgrp named -R /var/named"
+  - "chown named -R /var/named/dynamic"
+  - "restorecon -rv /var/named"
+
+- name: Create named.conf
+  template: src=named_conf.j2 dest=/etc/named.conf
+  tags: new
+
+- name: Change ownership and restore context of /etc/named.conf
+  command: "{{ item }}"
+  with_items:
+  - "chown -v root:named /etc/named.conf"
+  - "restorecon /etc/named.conf"
+
+#- name: Update resolver on the broker to use the local bind instance
+#  lineinfile:
+#    dest: /etc/resolv.conf
+#    regexp: "^nameserver"
+#    line: "nameserver  127.0.0.1"
+
+- name: Add rule to firewall allowing DNS, enable bind at start and start bind
+  command: "{{ item }}"
+  with_items:
+  - "lokkit --service=dns"
+  - "chkconfig named on"
+  - "service named start"
+
