@@ -18,6 +18,8 @@ When running on my Mac, I had to set the PYTHONPATH before sourcing hacking/env-
 $ export PYTHONPATH=/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages:/usr/local/lib/python2.7/site-packages
 ```
 
+Note that this is done for you by the create_infrastructure.sh script.
+
 ## Usage
 To set up your disconnected environment, first source your secrets environment file.
 
@@ -31,9 +33,10 @@ export AWS_SECRET_ACCESS_KEY='1234...'
 export ec2_keypair="keypair_name"
 ```
 
-Then:
+For example:
 
 ```
 $ cd openshift-disconnected
+$ source ../path/to/my/secrets.sh
 $ ./create_infrastructure.sh
 ```
