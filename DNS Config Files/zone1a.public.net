@@ -1,0 +1,19 @@
+$TTL    604800
+@       IN      SOA     ns1.zone1a.private.net. admin.zone1a.private.net. (
+                  3       ; Serial
+             604800     ; Refresh
+              86400     ; Retry
+            2419200     ; Expire
+             604800 )   ; Negative Cache TTL
+;
+; name servers - NS records
+     IN      NS      ns1.zone1a.private.net.
+;     IN      NS      ns2.nyc3.example.com.
+
+; name servers - A records
+ns1.zone1a.private.net.          IN      A       10.0.2.112
+; ns2.zone1a.private.net.          IN      A       10.0.2.xxx
+
+; 192.168.0.0/16 - A records
+bastion.zone1a.public.net.        IN      A      192.168.1.114
+; node2.zone1a.private.net.        IN      A      10.0.2.xxx
