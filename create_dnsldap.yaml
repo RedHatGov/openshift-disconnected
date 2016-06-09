@@ -23,12 +23,20 @@
       name: "{{ cluster_id }}-dnsldap"
       description: "{{ cluster_id }} dnsldap security group"
       region: "{{ ec2_region }}"
-      vpc_id: "{{ public_vpc.vpc_id }}"
+      vpc_id: "{{ private_vpc.vpc_id }}"
       rules:
         - proto: tcp
           from_port: 22
           to_port: 22
           cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 53
+          to_port: 53
+          cidr_ip: 192.168.0.0/16
+        - proto: tcp
+          from_port: 389
+          to_port: 22
+          cidr_ip: 192.168.0.0/16
         - proto: tcp
           from_port: 5902
           to_port: 5902
@@ -50,33 +58,29 @@
     debug: var=security_group
     when: debug_print == true
 
-  - name: Create ec2 bastion host instance
+  - name: Create ec2 DNS LDAP Server instance
     ec2:
       image: "{{ ec2_image }}"
       region: "{{ ec2_region }}"
       key_name: "{{ ec2_keypair }}"
-      instance_type: "{{ ec2_instance_type_bastion }}"
+      instance_type: "{{ ec2_instance_type_dnsldap }}"
       group_id: "{{ security_group.group_id }}"
       instance_tags:
-        Name: "{{ cluster_id }}-bastion"
-        instance_role: "bastion"
+        Name: "{{ cluster_id }}-dnsldap"
+        instance_role: "dnsldap"
         env: "{{ cluster_id }}"
       exact_count: "1"
       count_tag:
-        Name: "{{ cluster_id }}-bastion"
-        instance_role: "bastion"
+        Name: "{{ cluster_id }}-dnsldap"
+        instance_role: "dnsldap"
       wait: yes
       volumes:
-        - volume_size: 10
+        - volume_size: 50
           device_type: gp2
           device_name: /dev/sda1
           delete_on_termination: True
-        - device_name: /dev/xvdb
-          device_type: gp2
-          volume_size: 30
-          delete_on_termination: True
-      assign_public_ip: yes
-      vpc_subnet_id: "{{ public_vpc.subnets.0.id }}"
+      assign_public_ip: no
+      vpc_subnet_id: "{{ private_vpc.subnets.0.id }}"
     register: ec2
 
   - name: Debug ec2 data structure
@@ -84,41 +88,41 @@
     when: debug_print == true
 
   - set_fact:
-      bastion_instance_id:  "{{ ec2.instances[0].id }}"
+      dnsldap_instance_id:  "{{ ec2.instances[0].id }}"
     when: ec2.instances is defined and ec2.instances
 
   - set_fact:
-      bastion_instance_id: "{{ ec2.tagged_instances[0].id }}"
+      dnsldap_instance_id: "{{ ec2.tagged_instances[0].id }}"
     when: ec2.tagged_instances is defined and ec2.tagged_instances
 
   - set_fact:
-      bastion_dns_name: "{{ cluster_id }}.{{ r53_zone }}"
+      dnsldap_dns_name: "{{ cluster_id }}.{{ r53_zone }}"
 
-  - name: Allocate and associate an Elastic IP
-    ec2_eip:
-      instance_id: "{{ bastion_instance_id }}"
-      region: "{{ ec2_region }}"
-      state: present
-    register: eip
+  #- name: Allocate and associate an Elastic IP
+  #  ec2_eip:
+  #    instance_id: "{{ bastion_instance_id }}"
+  #    region: "{{ ec2_region }}"
+  #    state: present
+  #  register: eip
 
   # Shouldn't have to do this since we wait for SSH below. But I'm seeing
   # failures in the next plays due to SSH failures.
   - name: Wait for the networking to come back up
     pause: minutes=1
 
-  - set_fact:
-      bastion_eip: "{{ eip.public_ip }}"
+  #- set_fact:
+  #    bastion_eip: "{{ eip.public_ip }}"
 
-  - name: Create A record in Route53
-    route53:
-      command: create
-      zone: "{{ r53_zone }}"
-      record: "{{ bastion_dns_name }}"
-      type: A
-      ttl: 300
-      value: "{{ bastion_eip }}"
-      wait: no
-      overwrite: yes
+  #- name: Create A record in Route53
+  #  route53:
+  #    command: create
+  #    zone: "{{ r53_zone }}"
+  #    record: "{{ bastion_dns_name }}"
+  #    type: A
+  #    ttl: 300
+  #    value: "{{ bastion_eip }}"
+  #    wait: no
+  #    overwrite: yes
 
 #  - set_fact:
 #      bastion_public_dns_name: "{{ ec2.instances[0].public_dns_name }}"
@@ -128,18 +132,19 @@
 #      bastion_public_dns_name: "{{ ec2.tagged_instances[0].public_dns_name }}"
 #    when: ec2.tagged_instances is defined and ec2.tagged_instances
 
-  - add_host: name={{ bastion_dns_name }} groups=bastion
+  #- add_host: name={{ bastion_dns_name }} groups=bastion
 
-  - name: Debug groups data structure
-    debug: var=groups.bastion
-    when: debug_print == true
+ # - name: Debug groups data structure
+ #   debug: var=groups.bastion
+ #   when: debug_print == true
 
   - name: Wait for SSH to come up
-    wait_for: host={{ bastion_dns_name }} port=22 delay=0 timeout=600 state=started
+   # wait_for: host={{ bastion_dns_name }} port=22 delay=0 timeout=600 state=started
+   pause: minutes=1
 
-  - name: Wait for successful SSH
-    command: "ssh -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null ec2-user@{{ bastion_dns_name }} echo host is up"
-    register: result
-    until: result.rc == 0
-    retries: 60
-    delay: 10
+ # - name: Wait for successful SSH
+ #   command: "ssh -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null ec2-user@{{ bastion_dns_name }} echo host is up"
+ #   register: result
+ #   until: result.rc == 0
+ #   retries: 60
+ #   delay: 10
