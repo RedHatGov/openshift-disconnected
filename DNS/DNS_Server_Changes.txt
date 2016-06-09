@@ -28,4 +28,21 @@ Updating for dependencies:
 
     Those packages will need to be included on the DNS/LDAP server.
 
-4) Configured BIND (to be continued...)
+4) Configured BIND with the following files:
+
+/etc/named.conf  <-- Defines the DNS parameters, importantly the allow query from line
+/etc/named/named.conf.local  <-- Defines the zones and where to find their corresponding DB files
+/etc/named/zones/db.zone1a.public.net  <-- Forward lookup for public zone1a
+/etc/named/zones/db.zone1a.private.net  <-- Forward lookup for private zone1a
+/etc/named/zones/db.zone1e.private.net  <-- Forward lookup for private zone1e
+/etc/named/zones/db.168.192  <-- Reverse lookup for public zone1a (168.192.in-addr.arpa)
+/etc/named/zones/db.2.0.10  <-- Reverse lookup for private zone1a (2.0.10.in-addr.arpa)
+/etc/named/zones/db.3.0.10  <-- Reverse lookup for private zone1e (3.0.10.in-addr.arpa)
+
+5) Enabled and started the named service
+
+6) After a miserable failure, I added port 53 to the security groups and then everything worked.
+
+NOTE: For this test I manually added the DNS server's IP to /etc/resolv.conf to force lookup via the DNS server. In
+order for this to work in production, we'll need to assign the DNS server a static IP, reconfigure it and the
+bastion host to use it as primary DNS, then add it to the nodes as they're built as well.

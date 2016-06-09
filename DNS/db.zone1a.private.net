@@ -1,5 +1,6 @@
-; BIND db file for zone1a.private.net
-
+;
+; BIND forward lookup data file for zone1a.private.net
+;
 $TTL 86400
 
 @       IN      SOA     ns1.zone1a.private.net.      admin.zone1a.private.net. (

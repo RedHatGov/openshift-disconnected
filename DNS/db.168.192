@@ -1,3 +1,6 @@
+;
+; BIND reverse lookup data file for 168.192.in-addr.arpa
+;
 $TTL    604800
 @       IN      SOA     ns1.zone1a.private.net. admin.zone1a.private.net. (
                               3         ; Serial
@@ -11,4 +14,4 @@ $TTL    604800
 
 ; PTR Records
 112.2.0.10.in-addr.arpa.   IN      PTR     ns1.zone1a.private.net.    ; 10.0.2.112
-231.3.0.10.in-addr.arpa.   IN      PTR     node1.zone1e.private.net.    ; 10.0.3.231
+114.1.168.192.in-addr.arpa.   IN      PTR     bastion.zone1a.public.net.    ; 192.168.1.114

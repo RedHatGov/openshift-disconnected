@@ -1,0 +1,29 @@
+zone "zone1a.private.net" {
+        type master;
+        file "/etc/named/zones/db.zone1a.private.net"; # zone file path
+};
+
+zone "2.0.10.in-addr.arpa" {
+        type master;
+        file "/etc/named/zones/db.2.0.10"; # 10.0.2.0/24 (private zone1asubnet)
+};
+
+zone "zone1e.private.net" {
+        type master;
+        file "/etc/named/zones/db.zone1e.private.net"; # zone file path
+};
+
+zone "3.0.10.in-addr.arpa" {
+        type master;
+        file "/etc/named/zones/db.3.0.10"; # 10.0.3.0/24 (private zone1e subnet)
+};
+
+zone "zone1a.public.net" {
+        type master;
+        file "/etc/named/zones/db.zone1a.public.net"; # zone file path
+};
+
+zone "168.192.in-addr.arpa" {
+        type master;
+        file "/etc/named/zones/db.168.192"; # 192.168.0.0/16 (public zone1a subnet)
+};

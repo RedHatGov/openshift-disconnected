@@ -1,0 +1,17 @@
+;
+; BIND reverse lookup data file for 3.0.10.in-addr.arpa
+;
+$TTL 86400
+@       IN      SOA     ns1.zone1a.private.net. admin.zone1a.private.net. (
+                        5               ; serial
+                        21600           ; refresh after 6 hours
+                        3600            ; retry after 1 hour
+                        604800          ; expire after 1 week
+                        86400 )         ; minimum TTL of 1 day
+; name servers
+      IN      NS      ns1.zone1a.private.net.
+;      IN      NS      ns2.zone1a.private.net.
+
+; PTR Records
+112.2.0.10.in-addr.arpa.   IN      PTR     ns1.zone1a.private.net.    ; 10.0.2.112
+231.3.0.10.in-addr.arpa.   IN      PTR     node1.zone1e.private.net.    ; 10.0.3.231

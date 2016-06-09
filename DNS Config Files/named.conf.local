@@ -1,9 +1,0 @@
-zone "zone1a.private.net" {
-        type master;
-        file "/etc/named/zones/db.zone1a.private.net"; # zone file path
-};
-
-zone "2.0.10.in-addr.arpa" {
-        type master;
-        file "/etc/named/zones/db.2.0.10"; # 10.0.2.0/24 (private zone1asubnet)
-};

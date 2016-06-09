@@ -1,3 +1,6 @@
+;
+; BIND forward lookup data file for zone1e.private.net
+;
 $TTL    604800
 @       IN      SOA     ns1.zone1a.private.net. admin.zone1a.private.net. (
                   3       ; Serial
