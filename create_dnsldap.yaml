@@ -1,0 +1,145 @@
+# vim: set ft=ansible:
+---
+- name: Create the DNS Server
+  hosts: localhost
+  gather_facts: no
+  connection: local
+  become: False
+  vars:
+    debug_print: true
+    cluster_id: "{{ lookup('env','os_cluster_id') }}"
+    ec2_region: "{{ lookup('env','ec2_region') }}"
+    os_cluster_id: "{{ lookup('env','os_cluster_id') }}"
+    ec2_keypair: "{{ lookup('env','ec2_keypair') }}"
+    ec2_instance_type_dnsldap: "{{ lookup('env','ec2_instance_type_dnsldap') }}"
+    ec2_image: "{{ lookup('env','ec2_image') }}"
+    r53_zone: "{{ lookup('env','r53_zone') }}"
+
+
+
+  tasks:
+  - name: Create DNS LDAP security group
+    ec2_group:
+      name: "{{ cluster_id }}-dnsldap"
+      description: "{{ cluster_id }} dnsldap security group"
+      region: "{{ ec2_region }}"
+      vpc_id: "{{ public_vpc.vpc_id }}"
+      rules:
+        - proto: tcp
+          from_port: 22
+          to_port: 22
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 5902
+          to_port: 5902
+          cidr_ip: 0.0.0.0/0
+        - proto: all
+          from_port: -1
+          to_port: -1
+          cidr_ip: 10.0.0.0/16
+        - proto: all
+          from_port: -1
+          to_port: -1
+          cidr_ip: 192.168.0.0/16
+      rules_egress:
+        - proto: all
+          cidr_ip: 0.0.0.0/0
+    register: security_group
+
+  - name: Debug security group data structure
+    debug: var=security_group
+    when: debug_print == true
+
+  - name: Create ec2 bastion host instance
+    ec2:
+      image: "{{ ec2_image }}"
+      region: "{{ ec2_region }}"
+      key_name: "{{ ec2_keypair }}"
+      instance_type: "{{ ec2_instance_type_bastion }}"
+      group_id: "{{ security_group.group_id }}"
+      instance_tags:
+        Name: "{{ cluster_id }}-bastion"
+        instance_role: "bastion"
+        env: "{{ cluster_id }}"
+      exact_count: "1"
+      count_tag:
+        Name: "{{ cluster_id }}-bastion"
+        instance_role: "bastion"
+      wait: yes
+      volumes:
+        - volume_size: 10
+          device_type: gp2
+          device_name: /dev/sda1
+          delete_on_termination: True
+        - device_name: /dev/xvdb
+          device_type: gp2
+          volume_size: 30
+          delete_on_termination: True
+      assign_public_ip: yes
+      vpc_subnet_id: "{{ public_vpc.subnets.0.id }}"
+    register: ec2
+
+  - name: Debug ec2 data structure
+    debug: var=ec2
+    when: debug_print == true
+
+  - set_fact:
+      bastion_instance_id:  "{{ ec2.instances[0].id }}"
+    when: ec2.instances is defined and ec2.instances
+
+  - set_fact:
+      bastion_instance_id: "{{ ec2.tagged_instances[0].id }}"
+    when: ec2.tagged_instances is defined and ec2.tagged_instances
+
+  - set_fact:
+      bastion_dns_name: "{{ cluster_id }}.{{ r53_zone }}"
+
+  - name: Allocate and associate an Elastic IP
+    ec2_eip:
+      instance_id: "{{ bastion_instance_id }}"
+      region: "{{ ec2_region }}"
+      state: present
+    register: eip
+
+  # Shouldn't have to do this since we wait for SSH below. But I'm seeing
+  # failures in the next plays due to SSH failures.
+  - name: Wait for the networking to come back up
+    pause: minutes=1
+
+  - set_fact:
+      bastion_eip: "{{ eip.public_ip }}"
+
+  - name: Create A record in Route53
+    route53:
+      command: create
+      zone: "{{ r53_zone }}"
+      record: "{{ bastion_dns_name }}"
+      type: A
+      ttl: 300
+      value: "{{ bastion_eip }}"
+      wait: no
+      overwrite: yes
+
+#  - set_fact:
+#      bastion_public_dns_name: "{{ ec2.instances[0].public_dns_name }}"
+#    when: ec2.instances is defined and ec2.instances
+
+#  - set_fact:
+#      bastion_public_dns_name: "{{ ec2.tagged_instances[0].public_dns_name }}"
+#    when: ec2.tagged_instances is defined and ec2.tagged_instances
+
+  - add_host: name={{ bastion_dns_name }} groups=bastion
+
+  - name: Debug groups data structure
+    debug: var=groups.bastion
+    when: debug_print == true
+
+  - name: Wait for SSH to come up
+    wait_for: host={{ bastion_dns_name }} port=22 delay=0 timeout=600 state=started
+
+  - name: Wait for successful SSH
+    command: "ssh -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null ec2-user@{{ bastion_dns_name }} echo host is up"
+    register: result
+    until: result.rc == 0
+    retries: 60
+    delay: 10
