@@ -91,8 +91,18 @@
     - "rhel-7-server-rpms"
     - "rhel-7-server-extras-rpms"
     - "rhel-7-server-ose-3.2-rpms"
-    - "epel"
   async: 1800
+  poll: 60
+
+- name: Make the EPEL directories
+  file:
+    name: /var/www/html/epel/Packages
+    state: directory
+    recurse: yes
+
+- name: Sync EPEL repo
+  command: reposync -n -r epel -p "/var/www/html/epel/Packages"
+  async: 600
   poll: 60
 
 - name: Install createrepo
