@@ -40,3 +40,6 @@ $ cd openshift-disconnected
 $ source ../path/to/my/secrets.sh
 $ ./create_infrastructure.sh
 ```
+
+## Pitfalls
+Right now we have duplicative variables in env_aws.sh and in the role vars. They need to match. 

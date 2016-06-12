@@ -31,7 +31,19 @@ else
     popd
 fi
 
-ansible-playbook -v -i inventory/aws/hosts/ec2.py create_infrastructure.yaml
+ansible-playbook -v -i inventory/aws/hosts/ec2.py \
+    --extra-vars "rhn_username=${rhn_username} rhn_password=${rhn_password} \
+                  ec2_keypair=${ec2_keypair}" \
+    infrastructure.yml
+
+printf "Refreshing EC2 cache..."
+./inventory/aws/hosts/ec2.py --refresh-cache
+printf "done\n"
+
+ansible-playbook -v -i inventory/aws/hosts/ec2.py \
+    --extra-vars "rhn_username=${rhn_username} rhn_password=${rhn_password} \
+                  ec2_keypair=${ec2_keypair}" \
+    bastionservers.yml
 
 # For security, wipe out the RHN password
 unset rhn_password
