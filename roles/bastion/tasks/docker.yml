@@ -70,6 +70,12 @@
   async: 3600
   poll: 60
 
+- name: make the docker dump directory
+  file:
+    path: /var/www/html/docker
+    state: directory
+    recurse: yes
+
 - name: save docker images
   command: docker_dump.sh
   async: 600
