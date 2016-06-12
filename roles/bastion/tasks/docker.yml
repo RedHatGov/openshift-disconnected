@@ -32,21 +32,45 @@
     state: started
     enabled: yes
 
-- name: copy docker_list_images.py
+#- name: copy docker_list_images.py
+#  copy:
+#    src: docker_list_images.py
+#    dest: /var/www/html/docker_list_images.py
+#    mode: 0755
+#
+#- name: copy docker_save.sh
+#  copy:
+#    src: docker_save.sh
+#    dest: /var/www/html/docker_save.sh
+#    mode: 0755
+#
+#- name: download docker images
+#  command: /var/www/html/docker_save.sh
+#  args:
+#    chdir: /var/www/html
+#  async: 2400
+#  poll: 60
+
+- name: copy docker_sync.py
   copy:
-    src: docker_list_images.py
-    dest: /var/www/html/docker_list_images.py
+    src: docker_sync.py
+    dest: /usr/local/bin/docker_sync.py
+    owner: root
     mode: 0755
 
-- name: copy docker_save.sh
+- name: copy docker_dump.sh
   copy:
-    src: docker_save.sh
-    dest: /var/www/html/docker_save.sh
+    src: docker_dump.sh
+    dest: /usr/local/bin/docker_dump.sh
+    owner: root
     mode: 0755
 
-- name: download docker images
-  command: /var/www/html/docker_save.sh
-  args:
-    chdir: /var/www/html
-  async: 2400
+- name: sync docker images
+  command: docker_sync.py
+  async: 3600
+  poll: 60
+
+- name: save docker images
+  command: docker_dump.sh
+  async: 600
   poll: 60
