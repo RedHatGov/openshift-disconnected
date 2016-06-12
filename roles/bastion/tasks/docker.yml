@@ -48,5 +48,5 @@
   command: /var/www/html/docker_save.sh
   args:
     chdir: /var/www/html
-  async: 1200
+  async: 2400
   poll: 60

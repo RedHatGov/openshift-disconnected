@@ -107,16 +107,17 @@
     - "rhel-7-server-extras-rpms"
     - "rhel-7-server-ose-3.2-rpms"
 
+# We do this one separately since there's no Packages directory
 - name: Set up local yum EPEL repo
   command: createrepo --database "/var/www/html/epel"
 
 - name: Tar up OSE repos
-  command: tar cvzf ose32.tar.gz rhel-7*
+  command: "tar czf ose32.tar.gz rhel-7-server-extras-rpms rhel-7-server-ose-3.2-rpms rhel-7-server-rpms"
   args:
     chdir: /var/www/html
 
 - name: Tar up EPEL repos
-  command: tar cvzf epel.tar.gz epel
+  command: "tar czf epel.tar.gz epel"
   args:
     chdir: /var/www/html
 
@@ -144,6 +145,6 @@
   poll: 60
 
 - name: tar up CentOS repos
-  command: tar cvzf centos7.tar.gz base extras updates
+  command: "tar cvzf centos7.tar.gz base extras updates"
   args:
     chdir: /var/www/html
