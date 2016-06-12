@@ -1,0 +1,102 @@
+---
+- name: create the Route 53 hosted zone
+  route53_zone:
+    zone: "{{ r53_zone }}"
+    state: present
+
+- name: Create ec2 private vpc
+  ec2_vpc:
+    state: present
+    dns_support: yes
+    dns_hostnames: yes
+    cidr_block: 10.0.0.0/16
+    resource_tags:
+      env: "{{ cluster_id }}"
+      Name: "{{ cluster_id }}-private"
+    region: "{{ ec2_region }}"
+    subnets:
+    - cidr: 10.0.1.0/24
+      az: "{{ ec2_private_1a_az }}"
+      resource_tags:
+        env: "{{ cluster_id }}"
+        Name: "{{ cluster_id }}-private-1a"
+    - cidr: 10.0.2.0/24
+      az: "{{ ec2_private_1e_az }}"
+      resource_tags:
+        env: "{{ cluster_id }}"
+        Name: "{{ cluster_id }}-private-1e"
+    internet_gateway: no
+    wait: yes
+  register: private_vpc
+
+- name: Create ec2 public vpc
+  ec2_vpc:
+    state: present
+    dns_support: yes
+    dns_hostnames: yes
+    cidr_block: 192.168.0.0/16
+    resource_tags:
+      env: "{{ cluster_id }}"
+      Name: "{{ cluster_id }}-public"
+    region: "{{ ec2_region }}"
+    subnets:
+    - cidr: 192.168.1.0/24
+      az: "{{ ec2_public_az }}"
+      resource_tags:
+        env: "{{ cluster_id }}"
+        Name: "{{ cluster_id }}-public-1a"
+    internet_gateway: yes
+    wait: yes
+  register: public_vpc
+
+- name: Create VPC peering Connection
+  ec2_vpc_peer:
+    region: "{{ ec2_region }}"
+    vpc_id: "{{ public_vpc.vpc_id }}"
+    peer_vpc_id: "{{ private_vpc.vpc_id }}"
+    state: present
+    tags:
+      Name: "{{ cluster_id }}-public-private-conn"
+      env: "{{ cluster_id }}"
+  register: vpc_peer
+
+- name: Accept VPC peering request
+  ec2_vpc_peer:
+    region: "{{ ec2_region }}"
+    peering_id: "{{ vpc_peer.peering_id }}"
+    state: accept
+    tags:
+      Name: "{{ cluster_id }}-public-private-req"
+      env: "{{ cluster_id }}"
+  register: action_peer
+
+- name: Set up private subnet route tables
+  ec2_vpc_route_table:
+    vpc_id: "{{ private_vpc.vpc_id }}"
+    region: "{{ ec2_region }}"
+    tags:
+      Name: private
+      env: "{{ cluster_id }}"
+    subnets:
+      - "{{ private_vpc.subnets.0.id }}"
+      - "{{ private_vpc.subnets.1.id }}"
+    routes:
+      - dest: 192.168.0.0/16
+        vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
+  register: private_route_table
+
+- name: Set up public subnet route tables
+  ec2_vpc_route_table:
+    vpc_id: "{{ public_vpc.vpc_id }}"
+    region: "{{ ec2_region }}"
+    tags:
+      Name: public
+      env: "{{ cluster_id }}"
+    subnets:
+      - "{{ public_vpc.subnets.0.id }}"
+    routes:
+      - dest: 10.0.0.0/16
+        vpc_peering_connection_id: "{{ vpc_peer.peering_id }}"
+      - dest: 0.0.0.0/0
+        gateway_id: "{{ public_vpc.igw_id }}"
+  register: public_route_table

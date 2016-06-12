@@ -7,7 +7,7 @@
     mode: 0700
 
 - name: Execute the partition script
-  shell: /tmp/partition.sh
+  command: /tmp/partition.sh
 
 - name: Format EBS volume
   filesystem:

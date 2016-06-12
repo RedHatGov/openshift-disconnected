@@ -5,8 +5,6 @@
     region: us-east-1
   register: vpc_subnet
 
-- debug: var=vpc_subnet
-
 - set_fact:
     public_vpc_id: "{{ vpc_subnet.subnets[0].vpc_id }}"
     public_subnet_id: "{{ vpc_subnet.subnets[0].id }}"

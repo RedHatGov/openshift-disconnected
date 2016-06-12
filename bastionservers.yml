@@ -1,7 +1,7 @@
 ---
-- hosts: localhost
-  connection: local
+- hosts: tag_instance_role_bastion
+  connection: ssh
   gather_facts: no
-  become: false
+  become: true
   roles:
     - bastion

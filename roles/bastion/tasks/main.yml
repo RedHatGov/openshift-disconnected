@@ -1,7 +1,5 @@
 ---
 # tasks file for bastion
-- include: aws.yml
-
 - include: yum.yml
 
 - include: vnc.yml
