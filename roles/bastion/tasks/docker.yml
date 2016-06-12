@@ -78,5 +78,5 @@
 
 - name: save docker images
   command: docker_dump.sh
-  async: 600
+  async: 3600
   poll: 60
