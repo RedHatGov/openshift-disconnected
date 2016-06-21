@@ -57,7 +57,7 @@
 #    regexp: "^nameserver"
 #    line: "nameserver  127.0.0.1"
 
-- name: Add rule to firewall allowing DNS, enable bind at start and start bind
+- name: Add rule to firewall allowing DNS Config Files, enable bind at start and start bind
   command: "{{ item }}"
   with_items:
   - "lokkit --service=dns"
