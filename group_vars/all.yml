@@ -1,6 +1,7 @@
 ---
 environment: ose_disconn
 cluster_id: "{{ environment }}"
+create_vpcs: true
 r53_zone: rhtps.io
 ec2_keypair: ose_disconn
 ec2_instance_count: 5

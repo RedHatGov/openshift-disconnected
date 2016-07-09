@@ -1,0 +1,5 @@
+---
+# Create the AWS resources. If you want to use pre-existing VPCs, use the
+# following line instead.
+# - include: private_aws.yml create_vpcs=false private_vpc_id=vpc-abcd1234 public_vpc_id=vpc-defg5678
+- include: private_aws.yml
