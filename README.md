@@ -30,5 +30,5 @@ $ ./sendit.sh
 If you want to override the default variables in ```group_vars/all.yml```, you can specify your own values when invoking ```ansible-playbook``` in ```sendit.sh```. For example:
 
 ```
-ansible-playbook -i inventory/aws/hosts/ec2.py --extra-vars "environment=my_env ec2_keypair=my_keypair" site.yml
+ansible-playbook -i inventory/aws/hosts/ec2.py --extra-vars "environment=my_env ec2_keypair=my_keypair vpc_public_id=vpc-1234abcd vpc_private_id=vpc-5678efgh" site.yml
 ```

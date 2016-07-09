@@ -4,7 +4,7 @@ cluster_id: "{{ environment }}"
 create_vpcs: true
 vpc_public_id: vpc-1234abcd  # used if create_vpcs=false
 vpc_private_id: vpc-5678defg # used if create_vpcs=false
-r53_zone: rhtps.io
+r53_zone: "rhtps.io"
 ec2_keypair: ose_disconn
 ec2_instance_count: 5
 ec2_region: us-east-1

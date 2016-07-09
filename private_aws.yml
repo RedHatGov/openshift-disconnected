@@ -4,4 +4,4 @@
   gather_facts: no
   become: false
   roles:
-    - ansible-vpc
+    - ansible-private-aws
