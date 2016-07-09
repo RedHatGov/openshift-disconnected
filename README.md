@@ -24,6 +24,10 @@ Note that this is done for you when you source the env.sh script.
 To set up your disconnected environment:
 
 ```
+$ export rhn_username=yourname
+$ export rhn_password=yourpass
+$ export aws_access_key=yourkey
+$ export aws_secret_key="yoursecret"
 $ ./sendit.sh
 ```
 
@@ -31,4 +35,10 @@ If you want to override the default variables in ```group_vars/all.yml```, you c
 
 ```
 ansible-playbook -i inventory/aws/hosts/ec2.py --extra-vars "environment=my_env ec2_keypair=my_keypair vpc_public_id=vpc-1234abcd vpc_private_id=vpc-5678efgh" site.yml
+```
+
+Also, if you want to skip a long step, like yum mirroring, you can do the following. Be sure to include the backslashes before the quotes.
+
+```
+$ ./sendit.sh --skip-tags \"yum\"
 ```
