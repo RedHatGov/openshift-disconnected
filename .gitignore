@@ -64,4 +64,5 @@ target/
 .idea/
 *.retry
 .DS_Store
+roles/ansible-private-aws/vars/rules.yml
 
