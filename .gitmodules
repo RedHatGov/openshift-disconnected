@@ -1,0 +1,27 @@
+[submodule "openshift-ansible"]
+	path = openshift-ansible
+	url = https://github.com/openshift/openshift-ansible
+[submodule "ansible"]
+	path = ansible
+	url = https://github.com/ansible/ansible
+[submodule "roles/ansible-private-aws"]
+	path = roles/ansible-private-aws
+	url = git@github.com:rhtps/ansible-private-aws.git
+[submodule "roles/ansible-role-800-53"]
+	path = roles/ansible-role-800-53
+	url = git@github.com:rhtps/ansible-role-800-53.git
+[submodule "roles/ansible-registry"]
+	path = roles/ansible-registry
+	url = git@github.com:rhtps/ansible-registry.git
+[submodule "roles/ansible-bind"]
+	path = roles/ansible-bind
+	url = git@github.com:rhtps/ansible-bind.git
+[submodule "roles/ansible-yum"]
+	path = roles/ansible-yum
+	url = git@github.com:rhtps/ansible-yum.git
+[submodule "roles/ansible-vnc"]
+	path = roles/ansible-vnc
+	url = git@github.com:rhtps/ansible-vnc.git
+[submodule "philosophy"]
+	path = philosophy
+	url = git@github.com:rhtps/philosophy.git

@@ -1,9 +1,0 @@
----
-# tasks file for bastion
-- include: yum.yml
-
-- include: vnc.yml
-
-- include: docker.yml
-
-- include: gitlab.yml
