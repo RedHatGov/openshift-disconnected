@@ -14,5 +14,4 @@ ec2_region_sideb: "{{ ec2_region }}e"
 ec2_image: ami-2051294a
 ec2_instance_type: m4.xlarge
 vncuser: osedisconn
-vnc_username: osedisconn
-vnc_password: Os3disc0nn
+vncpass: Os3disc0nn
