@@ -1,7 +1,8 @@
 ---
-- hosts: bastion
+- hosts: tag_instance_role_bastion
   connection: ssh
   gather_facts: no
   become: true
   roles:
     - ansible-yum
+    - ansible-vnc
