@@ -6,3 +6,4 @@
   roles:
     - ansible-yum
     - ansible-vnc
+    - ansible-registry
