@@ -1,0 +1,4 @@
+---
+- name: install openshift utils
+  yum: name=atomic-openshift-utils state=present
+
