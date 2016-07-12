@@ -1,0 +1,7 @@
+---
+- hosts: bind
+  connection: ssh
+  gather_facts: no
+  become: true
+  roles:
+    - ansible-bind
