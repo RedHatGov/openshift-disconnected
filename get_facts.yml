@@ -1,5 +1,5 @@
 ---
-- hosts: tag_instance_role_bind
+- hosts: tag_instance_role_bastion
   connection: ssh
   gather_facts: yes
   become: true
