@@ -4,4 +4,5 @@
   gather_facts: no
   become: true
   roles:
+    - ansible-private-common
     - ansible-bind

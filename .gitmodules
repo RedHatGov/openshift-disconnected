@@ -25,3 +25,6 @@
 [submodule "philosophy"]
 	path = philosophy
 	url = git@github.com:rhtps/philosophy.git
+[submodule "roles/ansible-private-common"]
+	path = roles/ansible-private-common
+	url = git@github.com:rhtps/ansible-private-common.git
