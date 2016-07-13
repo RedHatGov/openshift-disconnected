@@ -1,2 +1,4 @@
 ---
 - include: bind_servers.yml
+- include: openshift_masters.yml
+- include: openshift_nodes.yml

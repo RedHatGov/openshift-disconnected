@@ -1,2 +1,3 @@
 ---
 # vars file for private-openshift
+docker_vol: /dev/xvdb

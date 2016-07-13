@@ -1,8 +1,0 @@
----
-- hosts: nodes
-  connection: ssh
-  gather_facts: yes
-  become: true
-  roles:
-    - ansible-private-common
-    - ansible-private-openshift

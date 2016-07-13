@@ -1,0 +1,41 @@
+---
+- name: install ssh private key
+  copy:
+    src: "./secrets/{{ cluster_id }}"
+    dest: "/root/.ssh/{{ cluster_id }}"
+    owner: root
+    mode: 0600
+  when: node_type == "master"
+
+- set_fact: my_keyname="./secrets/{{ cluster_id }}.pub"
+
+- name: install public ssh key
+  authorized_key:
+    user: "{{ ec2_username }}"
+    key: "{{ lookup('file', my_keyname) }}"
+    manage_dir: yes
+    state: present
+
+- name: install docker
+  yum: name=docker state=present
+
+- name: enable insecure registries
+  lineinfile:
+    dest: /etc/sysconfig/docker
+    regexp: "^# INSECURE_REGISTRY"
+    line: "INSECURE_REGISTRY='--insecure-registry 0.0.0.0/0'"
+    state: present
+
+- name: set up docker storage
+  template:
+    src: docker-storage-setup.j2
+    dest: /etc/sysconfig/docker-storage-setup
+    owner: root
+    mode: 0644
+
+- name: execute docker-storage-setup
+  command: docker-storage-setup
+
+- name: install openshift utils
+  yum: name=atomic-openshift-utils state=present
+  when: node_type == 'master'
