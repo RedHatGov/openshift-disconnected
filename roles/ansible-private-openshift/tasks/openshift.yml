@@ -16,6 +16,9 @@
     manage_dir: yes
     state: present
 
+- name: yum update
+  yum: name="*" state=latest
+
 - name: install docker
   yum: name=docker state=present
 
@@ -39,3 +42,5 @@
 - name: install openshift utils
   yum: name=atomic-openshift-utils state=present
   when: node_type == 'master'
+
+- debug: var=groups

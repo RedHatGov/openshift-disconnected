@@ -1,0 +1,32 @@
+[OSEv3:children]
+masters
+nodes
+etcd
+lb
+[OSEv3:vars]
+ansible_ssh_user={{ ansible_ssh_user }}
+containerized=false
+ansible_become=yes
+debug_level=2
+deployment_type=openshift-enterprise
+openshift_docker_additional_registries={{ host_1 }}:5000
+openshift_docker_insecure_registries={{ host_1 }}:5000
+openshift_docker_blocked_registries=registry.access.redhat.com
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+osm_default_node_selector='region=primary'
+openshift_hosted_router_selector='region=infra'
+openshift_registry_selector='region=infra'
+openshift_master_console_port=443
+[masters]
+{{ host_2 }}
+{{ host_3 }}
+{{ host_4 }}
+[etcd]
+{{ host_5 }}
+[lb]
+{{ host_2 }}
+[nodes]
+{{ host_2 }} openshift_node_labels="{'region': 'infra'}"
+{{ host_3 }} openshift_node_labels="{'region': 'primary'}"
+{{ host_4 }} openshift_node_labels="{'region': 'primary'}"
+{{ host_5 }} openshift_node_labels="{'region': 'primary'}"
