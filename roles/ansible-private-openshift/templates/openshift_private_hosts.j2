@@ -3,6 +3,7 @@ masters
 nodes
 etcd
 lb
+
 [OSEv3:vars]
 ansible_ssh_user={{ ec2_username }}
 ansible_become=yes
@@ -17,6 +18,7 @@ osm_default_node_selector='region=primary'
 openshift_hosted_router_selector='region=infra'
 openshift_registry_selector='region=infra'
 openshift_master_console_port=443
+
 [masters]
 {% for ip in groups.masters %}
 {{ ip }}
