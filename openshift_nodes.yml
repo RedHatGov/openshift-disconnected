@@ -1,5 +1,5 @@
 ---
-- hosts: nodes
+- hosts: nodes, etcd, lb
   connection: ssh
   gather_facts: yes
   become: true
