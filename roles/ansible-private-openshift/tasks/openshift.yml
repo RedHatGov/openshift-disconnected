@@ -44,3 +44,17 @@
   when: node_type == 'master'
 
 - debug: var=groups
+
+- name: generate OpenShift Ansible hosts
+  template:
+    src: openshift_private_hosts.j2
+    dest: /root/hosts
+    owner: root
+    mode: 0644
+  when: ansible_hostname == groups.masters[0]
+
+- name: execute the OpenShift ansible install
+  command: ansible-playbook -i /root/hosts /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
+  async: 1200
+  poll: 60
+  when: ansible_hostname == groups.masters[0]

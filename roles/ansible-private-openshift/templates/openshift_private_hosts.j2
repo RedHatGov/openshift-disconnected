@@ -4,9 +4,9 @@ nodes
 etcd
 lb
 [OSEv3:vars]
-ansible_ssh_user={{ ansible_ssh_user }}
-containerized=false
+ansible_ssh_user={{ ec2_username }}
 ansible_become=yes
+containerized=false
 debug_level=2
 deployment_type=openshift-enterprise
 openshift_docker_additional_registries={{ host_1 }}:5000
