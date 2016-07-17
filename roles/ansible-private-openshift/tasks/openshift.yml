@@ -79,6 +79,6 @@
   command: ansible-playbook -i /root/hosts /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
   args:
     chdir: /root
-  async: 1200
+  async: 3600
   poll: 60
   when: ansible_hostname.replace('ip-','').replace('-','.') == groups.masters[0]
