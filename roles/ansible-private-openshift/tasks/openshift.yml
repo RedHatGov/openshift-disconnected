@@ -2,7 +2,7 @@
 - name: install ssh private key
   copy:
     src: "./secrets/{{ cluster_id }}"
-    dest: "/root/.ssh/{{ cluster_id }}"
+    dest: "/root/.ssh/id_rsa"
     owner: root
     mode: 0600
   when: node_type == "master"
@@ -14,6 +14,11 @@
     user: "{{ ec2_username }}"
     key: "{{ lookup('file', my_keyname) }}"
     manage_dir: yes
+    state: present
+
+- name: install prerequisites
+  yum:
+    name: wget,git,net-tools,bind-utils,iptables-services,bridge-utils,bash-completion
     state: present
 
 - name: yum update
@@ -45,13 +50,22 @@
   when: node_type == 'node' or node_type == 'master'
 
 - name: install openshift utils
-  yum: name=atomic-openshift-utils state=present
+  yum:
+    name: atomic-openshift-utils
+    state: present
   when: node_type == 'master'
 
 ##- debug: var=groups
 #- debug: var=ansible_hostname
 #- debug: var=groups.masters[0]
 #- debug: var=
+
+- name: copy ansible.cfg
+  copy:
+    src: ansible.cfg
+    dest: /root/ansible.cfg
+    owner: root
+    mode: 0600
 
 - name: generate OpenShift Ansible hosts
   template:
@@ -63,6 +77,8 @@
 
 - name: execute the OpenShift ansible install
   command: ansible-playbook -i /root/hosts /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
+  args:
+    chdir: /root
   async: 1200
   poll: 60
   when: ansible_hostname.replace('ip-','').replace('-','.') == groups.masters[0]
