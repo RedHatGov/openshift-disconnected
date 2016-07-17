@@ -70,3 +70,4 @@ facts/*
 secrets/*
 ansible/*
 log.txt
+test.sh
