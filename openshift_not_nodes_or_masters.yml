@@ -1,10 +1,10 @@
 ---
-- hosts: nodes
+- hosts: all:!bastions:!masters:!nodes
   connection: ssh
   gather_facts: yes
   become: true
   roles:
 #    - ansible-role-800-53
 #    - ansible-private-common
-    - { role: ansible-private-openshift, node_type: node }
+    - { role: ansible-private-openshift, node_type: other }
 

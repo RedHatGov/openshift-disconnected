@@ -35,15 +35,23 @@
     dest: /etc/sysconfig/docker-storage-setup
     owner: root
     mode: 0644
+  when: node_type == 'node' or node_type == 'master'
+
+#- debug: var=ansible_hostname
+#- debug: var=node_type
 
 - name: execute docker-storage-setup
   command: docker-storage-setup
+  when: node_type == 'node' or node_type == 'master'
 
 - name: install openshift utils
   yum: name=atomic-openshift-utils state=present
   when: node_type == 'master'
 
-- debug: var=groups
+##- debug: var=groups
+#- debug: var=ansible_hostname
+#- debug: var=groups.masters[0]
+#- debug: var=
 
 - name: generate OpenShift Ansible hosts
   template:
@@ -51,10 +59,10 @@
     dest: /root/hosts
     owner: root
     mode: 0644
-  when: ansible_hostname == groups.masters[0]
+  when: ansible_hostname.replace('ip-','').replace('-','.') == groups.masters[0]
 
 - name: execute the OpenShift ansible install
   command: ansible-playbook -i /root/hosts /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
   async: 1200
   poll: 60
-  when: ansible_hostname == groups.masters[0]
+  when: ansible_hostname.replace('ip-','').replace('-','.') == groups.masters[0]
