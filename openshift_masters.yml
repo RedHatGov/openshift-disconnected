@@ -4,5 +4,6 @@
   gather_facts: yes
   become: true
   roles:
+    - ansible-role-800-53
     - { role: ansible-private-common }
     - { role: ansible-private-openshift, node_type: master }

@@ -69,3 +69,4 @@ ssh_bastion.cfg
 facts/*
 secrets/*
 ansible/*
+log.txt
