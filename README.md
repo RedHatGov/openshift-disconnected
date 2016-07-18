@@ -38,7 +38,7 @@ Once your AWS CLI is set up, follow these steps:
 ```
 $ git clone --recursive https://github.com/jason-callaway/openshift-disconnected
 $ cd openshift-disconnected
-$ source env.sh # input your 
+$ source env.sh # input your RHN username and password
 $ ./sendit.sh
 ```
 
