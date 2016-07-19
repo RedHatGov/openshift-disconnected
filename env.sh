@@ -19,6 +19,9 @@ popd
 pushd ansible/lib/ansible/modules/extras
 git checkout b0aec50b9a0434ecf92942dcf2721edc2b60be8c
 popd
+pushd ansible
+git checkout 96495594cc2e6e854ef7e6e0d4a3df5ea688e793
+popd
 
 if [ ! -d secrets ]; then
     mkdir secrets

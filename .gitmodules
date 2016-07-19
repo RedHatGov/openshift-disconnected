@@ -4,7 +4,7 @@
 [submodule "ansible"]
 	path = ansible
 	url = https://github.com/ansible/ansible
-	branch = 96495594cc2e6e854ef7e6e0d4a3df5ea688e793
+#	branch = 96495594cc2e6e854ef7e6e0d4a3df5ea688e793
 [submodule "roles/ansible-private-aws"]
 	path = roles/ansible-private-aws
 	url = https://github.com/rhtps/ansible-private-aws
