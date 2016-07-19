@@ -13,6 +13,13 @@ if [ "$(uname -s)" == "Darwin" ]; then
     export PYTHONPATH=/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages:/usr/local/lib/python2.7/site-packages
 fi
 
+pushd ansible/lib/ansible/modules/core
+git checkout ca4365b644e3a264dcace54cf3234cd2d5f670b1
+popd
+pushd ansible/lib/ansible/modules/extras
+git checkout b0aec50b9a0434ecf92942dcf2721edc2b60be8c
+popd
+
 # Read RHN info
 printf "RHN username: "
 read rhn_username
