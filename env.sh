@@ -20,6 +20,13 @@ pushd ansible/lib/ansible/modules/extras
 git checkout b0aec50b9a0434ecf92942dcf2721edc2b60be8c
 popd
 
+if [ ! -d secrets ]; then
+    mkdir secrets
+fi
+if [ ! -f secrets/*.pub ]; then
+    ssh-keygen -t rsa -N '' -f secrets/deploy
+fi
+
 # Read RHN info
 printf "RHN username: "
 read rhn_username

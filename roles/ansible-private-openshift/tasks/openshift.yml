@@ -1,13 +1,15 @@
 ---
 - name: install ssh private key
   copy:
-    src: "./secrets/{{ cluster_id }}"
+#    src: "./secrets/{{ cluster_id }}"
+    src: "./secrets/deploy"
     dest: "/root/.ssh/id_rsa"
     owner: root
     mode: 0600
   when: node_type == "master"
 
-- set_fact: my_keyname="./secrets/{{ cluster_id }}.pub"
+#- set_fact: my_keyname="./secrets/{{ cluster_id }}.pub"
+- set_fact: my_keyname="./secrets/deploy.pub"
 
 - name: install public ssh key
   authorized_key:
