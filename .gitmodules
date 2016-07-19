@@ -28,4 +28,7 @@
 	url = https://github.com/rhtps/philosophy
 [submodule "roles/ansible-private-common"]
 	path = roles/ansible-private-common
-	url = https://github.com/rhtps/ansible-private-common.git
+	url = https://github.com/rhtps/ansible-private-common
+[submodule "roles/ansible-ldap"]
+	path = roles/ansible-ldap
+	url = https://github.com/rhtps/ansible-ldap
