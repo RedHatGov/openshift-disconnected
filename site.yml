@@ -1,3 +1,28 @@
 ---
-- include: private_aws.yml
-- include: bastion_servers.yml
+#- include: private_aws.yml
+#- include: bastion_servers.yml
+
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  become: false
+  roles:
+    - ansible-private-aws
+
+- hosts: tag_instance_role_bastion
+  connection: ssh
+  gather_facts: no
+  become: true
+  pre_tasks:
+    - meta: refresh_inventory
+  roles:
+    - ansible-yum
+    - ansible-vnc
+    - ansible-registry
+  post_tasks:
+    - name: copy ssh config file
+      copy:
+        src: ./config
+        dest: /home/ec2-user/.ssh/config
+        owner: ec2-user
+        mode: 0600
