@@ -13,15 +13,15 @@ if [ "$(uname -s)" == "Darwin" ]; then
     export PYTHONPATH=/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages:/usr/local/lib/python2.7/site-packages
 fi
 
-pushd ansible/lib/ansible/modules/core
-git checkout ca4365b644e3a264dcace54cf3234cd2d5f670b1
-popd
-pushd ansible/lib/ansible/modules/extras
-git checkout b0aec50b9a0434ecf92942dcf2721edc2b60be8c
-popd
-pushd ansible
-git checkout 96495594cc2e6e854ef7e6e0d4a3df5ea688e793
-popd
+#pushd ansible/lib/ansible/modules/core
+#git checkout ca4365b644e3a264dcace54cf3234cd2d5f670b1
+#popd
+#pushd ansible/lib/ansible/modules/extras
+#git checkout b0aec50b9a0434ecf92942dcf2721edc2b60be8c
+#popd
+#pushd ansible
+#git checkout 96495594cc2e6e854ef7e6e0d4a3df5ea688e793
+#popd
 
 if [ ! -d secrets ]; then
     mkdir secrets
@@ -54,5 +54,5 @@ else
 fi
 
 # Source the local Ansible to get 2.2, which we need for the vpc peering module
-source ./ansible/hacking/env-setup
+#source ./ansible/hacking/env-setup
 

@@ -1,9 +1,6 @@
 [submodule "openshift-ansible"]
 	path = openshift-ansible
 	url = https://github.com/openshift/openshift-ansible
-[submodule "ansible"]
-	path = ansible
-	url = https://github.com/ansible/ansible
 [submodule "roles/ansible-private-aws"]
 	path = roles/ansible-private-aws
 	url = https://github.com/rhtps/ansible-private-aws
