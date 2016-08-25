@@ -1,6 +1,47 @@
 ---
-- include: openshift_all_systems.yml
-- include: bind_servers.yml
-- include: openshift_masters.yml
-- include: openshift_nodes.yml
-- include: openshift_not_nodes_or_masters.yml
+#- include: openshift_all_systems.yml
+#- include: bind_servers.yml
+#- include: openshift_masters.yml
+#- include: openshift_nodes.yml
+#- include: openshift_not_nodes_or_masters.yml
+
+# Pre step for all systems but the bastions
+- hosts: all:!bastions
+  connection: ssh
+  gather_facts: yes
+  become: true
+  roles:
+    - ansible-role-800-53
+    - ansible-private-common
+
+# Set up bind systems
+- hosts: bind
+  connection: ssh
+  gather_facts: yes
+  become: true
+  roles:
+    - ansible-bind
+
+# Set up masters
+- hosts: masters
+  connection: ssh
+  gather_facts: yes
+  become: true
+  roles:
+    - { role: ansible-private-openshift, node_type: master }
+
+# Set up the nodes
+- hosts: nodes
+  connection: ssh
+  gather_facts: yes
+  become: true
+  roles:
+    - { role: ansible-private-openshift, node_type: node }
+
+# Set up everything else
+- hosts: all:!bastions:!masters:!nodes
+  connection: ssh
+  gather_facts: yes
+  become: true
+  roles:
+    - { role: ansible-private-openshift, node_type: other }
