@@ -1,10 +1,4 @@
 ---
-#- include: openshift_all_systems.yml
-#- include: bind_servers.yml
-#- include: openshift_masters.yml
-#- include: openshift_nodes.yml
-#- include: openshift_not_nodes_or_masters.yml
-
 # Pre step for all systems but the bastions
 - hosts: all:!bastions
   connection: ssh

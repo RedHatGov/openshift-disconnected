@@ -1,7 +1,4 @@
 ---
-#- include: private_aws.yml
-#- include: bastion_servers.yml
-
 - hosts: localhost
   connection: local
   gather_facts: no
