@@ -1,5 +1,5 @@
 ---
-environment: ose_disconn
+environment: ose_disconn2
 cluster_id: "{{ environment }}"
 create_vpcs: true
 vpc_public_id: vpc-1234abcd  # used if create_vpcs=false
