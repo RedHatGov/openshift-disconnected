@@ -33,6 +33,12 @@ Note that this is done for you when you source the env.sh script.
 ## Usage
 To set up your disconnected environment, first be sure that you can first ```aws ec2 describe-instances```. If your AWS CLI isn't configured, follow this [install guide](http://docs.aws.amazon.com/cli/latest/userguide/installing.html#install-with-pip), then [configure it](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html).
 
+You'll also need to install the ```boto``` and ```boto3``` Python modules. 
+
+If you're using an rpm-based Linux distro, you can do this with ```# yum install -y python-boto python-boto3```.
+ 
+If you're using a Mac, you can ```pip install boto; pip install boto3```, or use [Homebrew](http://brew.sh/).
+
 Once your AWS CLI is set up, follow these steps:
 
 ```
