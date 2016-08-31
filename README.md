@@ -46,7 +46,7 @@ $ git clone --recursive https://github.com/jason-callaway/openshift-disconnected
 $ cd openshift-disconnected
 $ ssh-agent bash
 $ ssh-add /path/to/your/key.pem
-$ source env.sh # input your RHN username and password
+$ source env.sh # input your RHN username, password, and pool id
 $ ./sendit.sh
 ```
 
