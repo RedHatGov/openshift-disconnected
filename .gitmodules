@@ -1,30 +1,30 @@
 [submodule "openshift-ansible"]
 	path = openshift-ansible
-	url = https://github.com/openshift/openshift-ansible
+	url = git@github.com:openshift/openshift-ansible.git
 [submodule "roles/ansible-private-aws"]
 	path = roles/ansible-private-aws
-	url = https://github.com/rhtps/ansible-private-aws
+	url = git@github.com:rhtps/ansible-private-aws.git
 [submodule "roles/ansible-role-800-53"]
 	path = roles/ansible-role-800-53
-	url = https://github.com/rhtps/ansible-role-800-53
+	url = git@github.com:rhtps/ansible-role-800-53.git
 [submodule "roles/ansible-registry"]
 	path = roles/ansible-registry
-	url = https://github.com/rhtps/ansible-registry
+	url = git@github.com:rhtps/ansible-registry.git
 [submodule "roles/ansible-bind"]
 	path = roles/ansible-bind
-	url = https://github.com/rhtps/ansible-bind
+	url = git@github.com:rhtps/ansible-bind.git
 [submodule "roles/ansible-yum"]
 	path = roles/ansible-yum
-	url = https://github.com/rhtps/ansible-yum
+	url = git@github.com:rhtps/ansible-yum.git
 [submodule "roles/ansible-vnc"]
 	path = roles/ansible-vnc
-	url = https://github.com/rhtps/ansible-vnc
+	url = git@github.com:rhtps/ansible-vnc.git
 [submodule "philosophy"]
 	path = philosophy
-	url = https://github.com/rhtps/philosophy
+	url = git@github.com:rhtps/philosophy.git
 [submodule "roles/ansible-private-common"]
 	path = roles/ansible-private-common
-	url = https://github.com/rhtps/ansible-private-common
+	url = git@github.com:rhtps/ansible-private-common.git
 [submodule "roles/ansible-ldap"]
 	path = roles/ansible-ldap
-	url = https://github.com/rhtps/ansible-ldap
+	url = git@github.com:rhtps/ansible-ldap.git
