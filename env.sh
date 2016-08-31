@@ -38,6 +38,10 @@ printf "RHN password: "
 read -s rhn_password
 export rhn_password
 echo
+printf "RHN pool id: "
+read rhn_pool
+export rhn_pool
+echo
 
 # Load AWS credentials if they're in ~/.aws, otherwise prompt for them
 # TODO make this support more than one keypair in .aws/credentials
