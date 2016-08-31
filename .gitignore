@@ -71,3 +71,4 @@ secrets/*
 ansible/*
 log.txt
 test.sh
+inventory/static/hosts
