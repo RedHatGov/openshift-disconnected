@@ -12,7 +12,7 @@ debug_level=2
 deployment_type=openshift-enterprise
 openshift_docker_additional_registries={{ groups.bastions[0] }}:5000
 openshift_docker_insecure_registries={{ groups.bastions[0] }}:5000
-openshift_docker_blocked_registries=registry.access.redhat.com
+openshift_docker_blocked_registries=registry.access.redhat.com,docker.io
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
 osm_default_node_selector='region=primary'
 openshift_hosted_router_selector='region=infra'
@@ -40,8 +40,8 @@ openshift_master_cluster_method='native'
 {{ ip }} openshift_node_labels="{'region': 'infra'}" openshift_schedulable=true
 {% endfor %}
 {% for ip in groups.nodes_sidea %}
-{{ ip }} openshift_node_labels="{'region': 'primary', 'zone', 'sidea'}"
+{{ ip }} openshift_node_labels="{'region': 'primary', 'zone': 'sidea'}"
 {% endfor %}
 {% for ip in groups.nodes_sideb %}
-{{ ip }} openshift_node_labels="{'region': 'primary', 'zone', 'sideb'}"
+{{ ip }} openshift_node_labels="{'region': 'primary', 'zone': 'sideb'}"
 {% endfor %}

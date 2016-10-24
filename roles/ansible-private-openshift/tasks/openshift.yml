@@ -55,6 +55,7 @@
   yum:
     name: atomic-openshift-utils
     state: present
+    disablerepo: epel
   when: node_type == 'master'
 
 ##- debug: var=groups

@@ -5,8 +5,8 @@
   gather_facts: yes
   become: true
   roles:
-    - ansible-role-800-53
     - ansible-private-common
+    - ansible-role-800-53
 
 # Set up bind systems
 - hosts: bind
