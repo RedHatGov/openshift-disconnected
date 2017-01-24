@@ -12,3 +12,6 @@
         dest: inventory/aws/hosts/ec2.ini
         regexp: "^instance_filters = tag:env=(.*)"
         replace: "instance_filters = tag:env={{ cluster_id }}"
+    - file:
+        path: inventory/static
+        state: directory
